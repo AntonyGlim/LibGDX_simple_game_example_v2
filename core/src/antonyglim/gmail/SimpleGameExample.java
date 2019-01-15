@@ -2,6 +2,7 @@ package antonyglim.gmail;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -76,7 +77,12 @@ public class SimpleGameExample extends ApplicationAdapter {
 		batch.end();
 
 		//Делаем ведро подвижным
-		mousClickingAction();
+		mousClickingAction();                                           //от мыши
+		byPressingKeyboard();                                           //от клавиатуры
+
+        //Ограничиваем движение ведра до границ области
+        if (bucketRectangle.x < 0) bucketRectangle.x = 0;
+        if (bucketRectangle.x > 800 - 64) bucketRectangle.x = 800 - 64;
 
 	}
 	
@@ -87,11 +93,20 @@ public class SimpleGameExample extends ApplicationAdapter {
 	/**
 	 * Метод перемещает ведро в то место, где была нажата ЛКМ
 	 */
-	public void mousClickingAction(){
+	private void mousClickingAction(){
 		if (Gdx.input.isTouched()){										//есть ли на данный момент прикосновение к экрану
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);		//возвращают текущую позицию прикосновения
 			camera.unproject(touchPos);									//преобразование координат прикосновения/мыши в систему координат камеры.
 			bucketRectangle.x = (int) touchPos.x - 64 / 2;
+		}
+	}
+
+	private void  byPressingKeyboard(){
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+			bucketRectangle.x -= 200 * Gdx.graphics.getDeltaTime();		//Gdx.graphics.getDeltaTime() возвращает время, прошедшее между последним и текущим кадром в секундах
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+			bucketRectangle.x += 200 * Gdx.graphics.getDeltaTime();
 		}
 	}
 }
