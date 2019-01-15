@@ -112,6 +112,11 @@ public class SimpleGameExample extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
+		dropImage.dispose();
+		bucketImage.dispose();
+		dropSonud.dispose();
+		rainMusic.dispose();
+		batch.dispose();
 	}
 
 	/**
@@ -168,12 +173,11 @@ public class SimpleGameExample extends ApplicationAdapter {
 			if(raindropRectangle.y + 64 < 0){
 				iterator.remove();
 			}
+			//если капля попала в ведро
 			if (raindropRectangle.overlaps(bucketRectangle)){
 				dropSonud.play();
 				iterator.remove();
 			}
-
 		}
-
 	}
 }
