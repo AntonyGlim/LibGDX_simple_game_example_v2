@@ -59,10 +59,15 @@ public class SimpleGameExample extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);					//говорит OpenGL очистить экран
+		camera.update();											//обновляем камеру
 
-
+		//рисуем ведро
+		batch.setProjectionMatrix(camera.combined);						//сообщается SpriteBatch использовать систему координат камеры
+		batch.begin();													//начать новую batch серию
+		batch.draw(bucketImage, bucketRectangle.x, bucketRectangle.y);
+		batch.end();
 	}
 	
 	@Override
