@@ -23,20 +23,15 @@ public class SimpleGameExample extends ApplicationAdapter {
 	Texture bucketImage;
 	Sound dropSonud;
 	Music rainMusic;
-
 	//добавим два новых поля в класс и назовем их camera и batch
 	OrthographicCamera camera;
 	SpriteBatch batch;
-
 	//Rectangle будет представлять ведро
 	Rectangle bucketRectangle;
-
 	//Вектор ля определения координатов ведра
 	Vector3 touchPos;
-
 	//Для хранения капель используется список
 	Array<Rectangle> raindropsList;						//Array - вместо ArrayList
-
 	//Последнее появление капли
 	long lastDropTime;
 
@@ -80,8 +75,8 @@ public class SimpleGameExample extends ApplicationAdapter {
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);					//говорит OpenGL очистить экран
-		camera.update();											//обновляем камеру
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);						//говорит OpenGL очистить экран
+		camera.update();												//обновляем камеру
 
 		//рисуем ведро
 		batch.setProjectionMatrix(camera.combined);						//сообщается SpriteBatch использовать систему координат камеры
