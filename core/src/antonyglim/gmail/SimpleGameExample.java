@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.awt.Rectangle;
+
 public class SimpleGameExample extends ApplicationAdapter {
 
 	//загрузить assets и сохранить ссылки на них
@@ -20,6 +22,9 @@ public class SimpleGameExample extends ApplicationAdapter {
 	//добавим два новых поля в класс и назовем их camera и batch
 	OrthographicCamera camera;
 	SpriteBatch batch;
+
+	//Rectangle будет представлять ведро
+	Rectangle bucketRectangle;
 
 	@Override
 	public void create () {
@@ -41,6 +46,14 @@ public class SimpleGameExample extends ApplicationAdapter {
 
 		//создать SpriteBatch
 		batch = new SpriteBatch();
+
+		//Мы хотим, чтобы ведро было на 20 пикселей выше нижней границы экрана
+		//и центрировалось по горизонтали
+		bucketRectangle = new Rectangle();
+		bucketRectangle.x = 800 / 2 - 64 / 2;
+		bucketRectangle.y = 20;
+		bucketRectangle.width = 64;
+		bucketRectangle.height = 64;
 
 	}
 
