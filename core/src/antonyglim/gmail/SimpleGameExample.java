@@ -9,9 +9,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.awt.Rectangle;
+import java.util.Iterator;
 
 public class SimpleGameExample extends ApplicationAdapter {
 
@@ -30,6 +34,12 @@ public class SimpleGameExample extends ApplicationAdapter {
 
 	//Вектор ля определения координатов ведра
 	Vector3 touchPos;
+
+	//Для хранения капель используется список
+	Array<Rectangle> raindropsList;						//Array - вместо ArrayList
+
+	//Последнее появление капли
+	long lastDropTime;
 
 	@Override
 	public void create () {
@@ -62,6 +72,10 @@ public class SimpleGameExample extends ApplicationAdapter {
 
 		//Вектор отвечает за перемещения ведра от прикосновения
 		touchPos = new Vector3();
+
+		//Cоздается экземпляр массива капель и порождается первая капля
+		raindropsList = new Array<Rectangle>();
+		createReindrop();
 	}
 
 	@Override
@@ -74,6 +88,10 @@ public class SimpleGameExample extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);						//сообщается SpriteBatch использовать систему координат камеры
 		batch.begin();													//начать новую batch серию
 		batch.draw(bucketImage, bucketRectangle.x, bucketRectangle.y);
+		//Рисуем капли
+		for (Rectangle raindrop : raindropsList){
+			batch.draw(dropImage, raindrop.x, raindrop.y);
+		}
 		batch.end();
 
 		//Делаем ведро подвижным
@@ -83,6 +101,14 @@ public class SimpleGameExample extends ApplicationAdapter {
         //Ограничиваем движение ведра до границ области
         if (bucketRectangle.x < 0) bucketRectangle.x = 0;
         if (bucketRectangle.x > 800 - 64) bucketRectangle.x = 800 - 64;
+
+        //сколько времени прошло, с тех пор как была создана новая капля и если необходимо, создавать еще одну новую каплю
+		if(TimeUtils.nanoTime() - lastDropTime > 1000000000){
+			createReindrop();
+		}
+		raindropsFalling();
+
+
 
 	}
 	
@@ -101,6 +127,9 @@ public class SimpleGameExample extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Метод перемещает ведро взависимости от нажатий клавиатуры
+	 */
 	private void  byPressingKeyboard(){
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
 			bucketRectangle.x -= 200 * Gdx.graphics.getDeltaTime();		//Gdx.graphics.getDeltaTime() возвращает время, прошедшее между последним и текущим кадром в секундах
@@ -108,5 +137,41 @@ public class SimpleGameExample extends ApplicationAdapter {
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
 			bucketRectangle.x += 200 * Gdx.graphics.getDeltaTime();
 		}
+	}
+
+	/**
+	 * Метод создает новый Rectangle,
+	 * устанавливает его в случайной позиции в верхней части экрана
+	 * и добавляет его в raindrops массив.
+	 */
+	private void createReindrop(){
+		Rectangle raindropRectangle = new Rectangle();
+		raindropRectangle.x = MathUtils.random(0, 800 - 64);
+		raindropRectangle.y = 480;
+		raindropRectangle.width = 64;
+		raindropRectangle.height = 64;
+		raindropsList.add(raindropRectangle);
+		lastDropTime = TimeUtils.nanoTime();							//записываем текущее время в наносекундах
+
+
+	}
+
+	/**
+	 * Метод отвечает за движение капель.
+	 * Капля двигаются с постоянной скоростью 200 пикселей в секунду.
+	 * Если капля находится ниже нижнего края экрана,
+	 * мы удаляем ее из массива.
+	 */
+	private void raindropsFalling(){
+		Iterator<Rectangle> iterator = raindropsList.iterator();
+		while (iterator.hasNext()){
+			Rectangle raindropRectangle = iterator.next();
+			raindropRectangle.y -= 200 * Gdx.graphics.getDeltaTime();
+			if(raindropRectangle.y + 64 < 0){
+				iterator.remove();
+			}
+
+		}
+
 	}
 }
