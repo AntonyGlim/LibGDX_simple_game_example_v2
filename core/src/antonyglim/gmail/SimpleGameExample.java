@@ -13,8 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import java.awt.Rectangle;
+import com.badlogic.gdx.math.Rectangle;
 import java.util.Iterator;
 
 public class SimpleGameExample extends ApplicationAdapter {
@@ -109,7 +108,6 @@ public class SimpleGameExample extends ApplicationAdapter {
 		raindropsFalling();
 
 
-
 	}
 	
 	@Override
@@ -168,6 +166,10 @@ public class SimpleGameExample extends ApplicationAdapter {
 			Rectangle raindropRectangle = iterator.next();
 			raindropRectangle.y -= 200 * Gdx.graphics.getDeltaTime();
 			if(raindropRectangle.y + 64 < 0){
+				iterator.remove();
+			}
+			if (raindropRectangle.overlaps(bucketRectangle)){
+				dropSonud.play();
 				iterator.remove();
 			}
 
