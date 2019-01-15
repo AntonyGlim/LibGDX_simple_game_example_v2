@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 import java.awt.Rectangle;
 
@@ -25,6 +26,9 @@ public class SimpleGameExample extends ApplicationAdapter {
 
 	//Rectangle будет представлять ведро
 	Rectangle bucketRectangle;
+
+	//Вектор ля определения координатов ведра
+	Vector3 touchPos;
 
 	@Override
 	public void create () {
@@ -55,6 +59,8 @@ public class SimpleGameExample extends ApplicationAdapter {
 		bucketRectangle.width = 64;
 		bucketRectangle.height = 64;
 
+		//Вектор отвечает за перемещения ведра от прикосновения
+		touchPos = new Vector3();
 	}
 
 	@Override
@@ -68,9 +74,24 @@ public class SimpleGameExample extends ApplicationAdapter {
 		batch.begin();													//начать новую batch серию
 		batch.draw(bucketImage, bucketRectangle.x, bucketRectangle.y);
 		batch.end();
+
+		//Делаем ведро подвижным
+		mousClickingAction();
+
 	}
 	
 	@Override
 	public void dispose () {
+	}
+
+	/**
+	 * Метод перемещает ведро в то место, где была нажата ЛКМ
+	 */
+	public void mousClickingAction(){
+		if (Gdx.input.isTouched()){										//есть ли на данный момент прикосновение к экрану
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);		//возвращают текущую позицию прикосновения
+			camera.unproject(touchPos);									//преобразование координат прикосновения/мыши в систему координат камеры.
+			bucketRectangle.x = (int) touchPos.x - 64 / 2;
+		}
 	}
 }
